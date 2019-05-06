@@ -2,6 +2,8 @@ const express = require('express');
 var router = express.Router();
 const Adv = require('../models/adv')
 const mongoose = require('mongoose')
+const multer = require ('multer');
+const upload = multer({dest:'uploads/'});
 
 router.get('/adv',(req,res,next) =>{
 Adv.find({}).exec().then(adv =>{
@@ -27,8 +29,8 @@ router.get('/adv/:id',(req,res,next) =>{
 
 });
 
-router.post('/adv',(req,res,next) =>{
-
+router.post('/adv',upload.single("productIdImage"),(req,res,next) =>{
+    console.log(req.file);
     const adv = new Adv({
 
         _id: new mongoose.Types.ObjectId(),

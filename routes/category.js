@@ -37,6 +37,8 @@ router.post('/category',(req,res,next) =>{
 
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
+        adv: req.body.advId,
+
         description: req.body.description
     });
      

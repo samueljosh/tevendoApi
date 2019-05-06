@@ -5,7 +5,8 @@ const categorySchemma = mongoose.Schema({
  
  name:{type:String, require:true},
  description:{type:String, require:false},
- createdAt:{type:Date, default:Date.Now}
+ createdAt:{type:Date, default:Date.Now},
+ adv:{type: mongoose.Schema.ObjectId, ref:'adv',required:true},
 
 
 });

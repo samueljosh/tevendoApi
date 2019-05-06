@@ -22,12 +22,12 @@ next();
 })
 const advRoutes = require('./routes/adv');
 const categoryRoutes = require('./routes/category');
-// const subCategoryRoutes = require('./routes/subcategory')
+ const subCategoryRoutes = require('./routes/subcategory')
 mongoose.connect('mongodb://localhost/test');
 
 app.use('/api',advRoutes);
 app.use('/api',categoryRoutes);
-// app.use('/api',subCategoryRoutes);
+ app.use('/api',subCategoryRoutes);
 
 
 app.use((req,res,next) => {

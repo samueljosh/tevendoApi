@@ -1,19 +1,67 @@
 const express = require('express');
 var router = express.Router();
+const mongoose = require('mongoose')
+
+
+// const Category = require('../models/category')
+
 
 const SubCategory = require('../models/subcategory')
-const Category = require('../models/category')
 
-const mongoose = require('mongoose')
+router.post('/subcategory', (req,res, next) => {
+    const subCategory = new SubCategory({
+        _id: mongoose.Types.ObjectId(),
+        category: req.body.categoryId,
+        description: req.body.description,
+        name: req.body.name
+    });
+
+    subCategory
+    .save()
+    .then(result => {
+        console.log(result);
+        res.status(201).json(result);
+    }).catch(err => { 
+        console.log(err);
+        res.status(500).json({
+                error:err
+        });
+    });
+    res.status(201).json({
+        message:"SubCategoria Criada",
+        subCategory:subCategory
+    });
+});
+
 
 // CATEGORIAS
 router.get('/subcategory',(req,res,next) =>{
-
-    subcategory.find().select('category name _id')
+    SubCategory.find()
+    .select('category  _id')
     .populate('category','name')
-    res.status(200).json({
-        message:'handle gest request'
+    .exec()
+    .then(docs => {
+        res.status(200).json({
+          subcategory: docs.map(doc => {
+            return {
+                _id :doc._id,
+                category: doc.category,
+                request: {
+                    type:"GET",
+                    url:"http://localhost:3000/category/"+doc._id
+                    }
+                };
+
+                })
+              });
+            })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({
+                    error:err
+            });
     });
+
 });
 
 router.get('/subcategory/:id',(req,res,next) =>{
@@ -36,25 +84,4 @@ router.get('/subcategory/:id',(req,res,next) =>{
 
 });
 
-router.post('/subcategory',(req,res,next) =>{
-    Category.findById(req.body.categoryId).then(category => {
-        const subcategory = new SubCategory({
-
-            _id: new mongoose.Types.ObjectId(),
-            name: req.body.name,
-            category: req.body.categoryId,
-            description: req.body.description
-        });
-        return category.save();
-    }).then(result => console.log(result))
-
-     
-    subcategory.save().then(result => {
-
-        console.log(result);
-    }).catch(err => console.log(err));
-
-    res.status(201).json({
-        message:'handle gest request'
-    });
-});
+module.exports = router;
