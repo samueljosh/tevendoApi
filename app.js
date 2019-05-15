@@ -7,40 +7,47 @@ const mongoose = require('mongoose')
 
 app.use(morgan('dev'));
 
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.use((req,res,next) =>{
+app.use((req, res, next) => {
 
-    res.header('Access-Control-Allow-Origin','*');
-    res.header('Access-Control-Allow-Headers','Origin, X-Requested-With ,Content-Type, Accept, Authorization');
-if(req.method === 'OPTIONS'){
-    Response.header('Access-Control-Allow-Methods','PUT,POST,PATCH,DELETE,GET')
-    return res.status(200).json({});
-}
-next();
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With ,Content-Type, Accept, Authorization');
+    if (req.method === 'OPTIONS') {
+        Response.header('Access-Control-Allow-Methods', 'PUT,POST,PATCH,DELETE,GET')
+        return res.status(200).json({});
+    }
+    next();
 })
 const advRoutes = require('./routes/adv');
 const categoryRoutes = require('./routes/category');
- const subCategoryRoutes = require('./routes/subcategory')
+const subCategoryRoutes = require('./routes/subcategory')
+const userRoutes = require('./routes/user')
+const emailRoutes = require('./routes/email')
+
+
 mongoose.connect('mongodb://localhost/test');
 
-app.use('/api',advRoutes);
-app.use('/api',categoryRoutes);
- app.use('/api',subCategoryRoutes);
+app.use('/api', advRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', subCategoryRoutes);
+app.use('/api', userRoutes);
+app.use('/api', emailRoutes);
 
 
-app.use((req,res,next) => {
+
+app.use((req, res, next) => {
 
     const error = new Error('Not found');
     error.status(404)
     next(error);
 })
 
-app.use((error,req,res,next) => {
+app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
-        error:{
+        error: {
             message: error.message
         }
     })
